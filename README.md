@@ -76,4 +76,9 @@
         + Test thấy mỗi phương pháp dùng LLM API (chatGPT, gemini) thì các LLM này hiểu ngữ cảnh và phân tích chính xác, nhưng tốc độ không nhanh và tốn tiền.
           
 - **Kiến trúc luồng dữ liệu:**
-- **Kỹ năng:**
+- **Tech stack:**
+  + Cloud: AWS
+  + Programming Language: Python/Scala
+  + Data Lakehouse: S3 Storage + Iceberg + Spark + dbt + Trino
+  + Data Quality Validation: Great Expectation
+  + Statistic/Report: Tableau
