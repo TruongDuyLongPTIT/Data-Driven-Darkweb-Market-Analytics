@@ -4,7 +4,8 @@
 
     Bộ dữ liệu Darknet Market Archives 2013–2015 (dnmarchives) là một tập hợp lớn các bản sao (mirrors) từ các chợ đen (darknet markets) và diễn đàn liên quan trên mạng Tor. Nó bao gồm khoảng 4,438 mirrors và hơn 43,596,420 file, với kích thước nén khoảng 50GB (giải nén lên đến 1.6TB). Bộ dữ liệu này tập trung vào các hoạt động từ năm 2011 đến 2015 (chủ yếu 2013–2015), chứa dữ liệu từ 89 chợ đen, hơn 37 diễn đàn, và khoảng 5 trang web hỗ trợ khác. Nội dung chủ yếu là dữ liệu thô để nghiên cứu về hệ sinh thái darknet, tội phạm mạng, và kinh tế ngầm.
 
-    + Ví dụ: 
+    + Ví dụ: [HASHSI~1.HTM](https://github.com/user-attachments/files/22004752/HASHSI.1.HTM)
+
   + Cấu trúc bộ dữ liệu (gồm 3 nhóm chính):
     + Markets (89 chợ đen):
       + Mô tả: Chứa bản sao của các chợ đen, bao gồm listings sản phẩm, giá cả, phản hồi, và hình ảnh.
