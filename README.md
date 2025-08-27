@@ -37,9 +37,9 @@
         + Số lượng file liên quan: Khoảng 10-15 file, chiếm phần nhỏ dung lượng.
 
   + **Lý do chọn bộ dữ liệu này:**
-      + Dữ liệu khá lớn, toàn bộ tập dữ liệu kích thước 52GB (khi nén), khi giải nén thì kích thước khoảng 1.6TB => Đủ lớn để luyện tập xử lý dữ liệu lớn.
-      + Dữ liệu lấy từ nhiều nguồn (89+ chợ đen, 37+ diễn đàn, và 1 số trang web và công cụ khác) nên tính bất đồng bộ cao => Luyện tập chuẩn hóa dữ liệu để đạt được sự nhất quán.
-      + Dữ liệu định dạng cực kỳ đa dạng: .csv, .xlsx, .html, .sql, .txt, .docx, .sav, dữ liệu comment/replies trong các forums, dữ liệu dạng ảnh... => Học cách xử lý dữ liệu có định dạng phong phú và có cấu trúc cực kỳ phức tạp.
+      + Dữ liệu khá lớn, toàn bộ tập dữ liệu kích thước 52GB (khi nén), khi giải nén thì kích thước khoảng 1.6TB => **Đủ lớn để luyện tập tối ưu khi xử lý bigdata**
+      + Dữ liệu lấy từ nhiều nguồn (89+ chợ đen, 37+ diễn đàn, và 1 số trang web và công cụ khác) nên tính bất đồng bộ cao => **Luyện tập chuẩn hóa dữ liệu để đạt được sự nhất quán.**
+      + Dữ liệu định dạng cực kỳ đa dạng: .csv, .xlsx, .html, .sql, .txt, .docx, .sav, dữ liệu comment/replies trong các forums, dữ liệu dạng ảnh... => **Học cách xử lý dữ liệu có định dạng phong phú và có cấu trúc cực kỳ phức tạp.**
       + Chủ đề thú vị, ít gặp. Có giá trị cho phân tích và phục vụ cho một số nghiêp vụ và các nghiên cứu hoạt động tội phạm trong thực tế.
         
   + **Nhược điểm khi chọn bộ dữ liệu này:**
