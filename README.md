@@ -76,6 +76,11 @@
         + Test thấy mỗi phương pháp dùng LLM API (chatGPT, gemini) thì các LLM này hiểu ngữ cảnh và phân tích chính xác, nhưng tốc độ không nhanh và tốn tiền.
           
 - **Kiến trúc luồng dữ liệu:**
+
+- **Thiết kế Dim/Fact/Mart:**
+- **Cây thư mục:**
+  + 
+  
 - **Tech stack:**
   + Cloud: AWS
   + Programming Language: Python/Scala
