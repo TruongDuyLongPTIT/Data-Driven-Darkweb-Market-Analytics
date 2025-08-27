@@ -54,7 +54,7 @@
     + **Luyện tập khả năng xử lý dữ liệu thế giới thực (đa nguồn, đa dạng, phức tạp).**
       
 - **Danh sách báo cáo & thống kê:**
-    + Báo cáo/thống kê về market (tập trung làm trước):
+    + **Báo cáo/thống kê về market (tập trung làm trước):**
       + Phân tích hàng hóa/dịch vụ buôn bán: 
         + Thống kê loại sản phẩm phổ biến (ma túy, card tín dụng, tài khoản bị hack, vũ khí, malware, dịch vụ thuê hacker…).
         + Xu hướng thay đổi theo thời gian (ví dụ: khi một market sập thì mặt hàng nào tăng mạnh ở market khác).
@@ -70,7 +70,7 @@
       + Phân tích đánh giá/feedback:
         + Tỷ lệ review tích cực/tiêu cực của từng vendor, từng loại hàng.
           
-     + Báo cáo/phân tích về forums (phân tích các comment): Pending...
+     + **Báo cáo/phân tích về forums (phân tích các comment): Pending...**
         + Dữ liệu comment khá khó xử lý (Cần lọc, phân loại, sentiment analyst - phân tích cảm xúc comment)
         + Đã thử 1 số phương pháp như rule-based, các model pre-trained cho sentiment analyst nhưng vẫn khó để đạt được độ tin cậy cao, vì ngôn ngữ đa dạng, câu có hàm nghĩa, ẩn ý, cấu trúc câu phức tạp.
         + Test thấy mỗi phương pháp dùng LLM API (chatGPT, gemini) thì các LLM này hiểu ngữ cảnh và phân tích chính xác, nhưng tốc độ không nhanh và tốn tiền.
