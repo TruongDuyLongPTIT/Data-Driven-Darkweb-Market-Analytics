@@ -41,15 +41,18 @@
       + Dữ liệu lấy từ nhiều nguồn (89+ chợ đen, 37+ diễn đàn, và 1 số trang web và công cụ khác) nên tính bất đồng bộ cao => Luyện tập chuẩn hóa dữ liệu để đạt được sự nhất quán.
       + Dữ liệu định dạng cực kỳ đa dạng: .csv, .xlsx, .html, .sql, .txt, .docx, .sav, dữ liệu comment/replies trong các forums, dữ liệu dạng ảnh... => Học cách xử lý dữ liệu có định dạng phong phú và có cấu trúc cực kỳ phức tạp.
       + Chủ đề thú vị, ít gặp. Có giá trị cho phân tích và phục vụ cho một số nghiêp vụ và các nghiên cứu hoạt động tội phạm trong thực tế.
+        
   + **Nhược điểm khi chọn bộ dữ liệu này:**
       + Bộ dữ liệu này kết thúc thu thập vào 2015 và các darkweb này cũng đã bị đánh sập => Nên không còn rèn được kỹ năng crawl dữ liệu từ nguồn.
       + Không có dữ liệu mới sinh ra => Không xử lý real-time hay lập lịch xử lý batch được (Project này chỉ xử lý cả bộ dữ liệu trong 1 lần).
       + Không có hoạt động sửa/xóa dữ liệu => Không luyện tập được các kỹ năng cập nhật sự thay đổi của dữ liệu và dữ liệu cũng ít có tính lịch sử (dữ liệu không có nhiều phiên bản thay đổi, không có các version snapshot để lưu lịch sử thay đổi).
+        
 - **Mục đích:**
     + Đưa ra số liệu thống kê về tình hình buôn bán chất cấm, vũ khí, mã độc,... và các giao dịch phạm pháp khác.
     + Phục vụ cho phân tích, nghiên cứu hành vi của tội phạm từ đó có thể đưa ra hành động triệt phá, chặn bắt.
     + Phân tích đồ thị mạng lưới tội phạm (Ai mua, ai bán, mua bán cái gì) - cố gắng làm nếu đủ khả năng.
     + **Luyện tập khả năng xử lý dữ liệu thế giới thực (đa nguồn, đa dạng, phức tạp).**
+      
 - **Danh sách báo cáo & thống kê:**
     + Báo cáo/thống kê về market (tập trung làm trước):
       + Phân tích hàng hóa/dịch vụ buôn bán: 
@@ -67,5 +70,6 @@
         + Dữ liệu comment khá khó xử lý (Cần lọc, phân loại, sentiment analyst - phân tích cảm xúc comment)
         + Đã thử 1 số phương pháp như rule-based, các model pre-trained cho sentiment analyst nhưng vẫn khó để đạt được độ tin cậy cao, vì ngôn ngữ đa dạng, câu có hàm nghĩa, ẩn ý, cấu trúc câu phức tạp.
         + Test thấy mỗi phương pháp dùng LLM API (chatGPT, gemini) thì các LLM này hiểu ngữ cảnh và phân tích chính xác, nhưng tốc độ không nhanh và tốn tiền.
+          
 - **Kiến trúc luồng dữ liệu:**
 - **Kỹ năng:**
