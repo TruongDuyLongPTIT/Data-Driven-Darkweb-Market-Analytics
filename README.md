@@ -8,7 +8,7 @@
           <img width="1899" height="1013" alt="image" src="https://github.com/user-attachments/assets/c4f7afd7-8e23-43fc-9dca-9bb062c7ccba" />
 
   + **Cấu trúc bộ dữ liệu (gồm 3 nhóm chính):**
-    + Markets (89 chợ đen):
+    + **Markets (89 chợ đen):**
       + Mô tả: Chứa bản sao của các chợ đen, bao gồm listings sản phẩm, giá cả, phản hồi, và hình ảnh.
       + Cấu trúc: Các file .tar.xz theo tên chợ, chứa thư mục con theo ngày crawl (YYYY-MM-DD).
       + Nội dung mẫu:
@@ -17,7 +17,7 @@
         + Ví dụ file: agora.tar.xz (~5.87GB) chứa thư mục 2014-04-21-whom-astorposts/ với HTML, CSS, và hình ảnh từ chợ Agora.
         + Số lượng file liên quan: Khoảng 100 file, chiếm phần lớn kích thước.
     
-    + Forums (>37 diễn đàn)
+    + **Forums (>37 diễn đàn):**
       + Mô tả: Chứa bản sao của các diễn đàn liên quan đến chợ đen, bao gồm threads, posts, và comments.
       + Cấu trúc: File .tar.xz theo tên diễn đàn, chứa thư mục con theo ngày crawl, với HTML và đôi khi SQL dumps.
       + Nội dung mẫu:
@@ -26,7 +26,7 @@
         + Ví dụ file: silkroad1-forums-20130703-anonymous.tar.xz (~11.72MB) chứa thư mục con với HTML của diễn đàn Silk Road 1; 2017-03-10-decaryhetu-sr1forumscrape.sql.xz chứa SQL dump từ diễn đàn Silk Road 1.
         + Số lượng file liên quan: Khoảng 50 file, chiếm khoảng 20-30% dung lượng.
     
-    + Miscellaneous (~5 trang web và file hỗ trợ)
+    + **Miscellaneous (~5 trang web và file hỗ trợ):**
       + Mô tả: Các trang web hỗ trợ hoặc dữ liệu bổ sung, như công cụ tìm kiếm darknet hoặc thống kê.
       + Cấu trúc: File .tar.xz chứa CSV, SQL, hoặc HTML.
       + Nội dung mẫu:
