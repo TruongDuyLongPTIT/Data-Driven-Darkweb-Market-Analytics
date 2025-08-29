@@ -1,0 +1,5 @@
+cd ~
+curl -LO https://dev.yorhel.nl/download/ncdu-2.3-linux-x86_64.tar.gz
+tar -xzf ncdu-2.3-linux-x86_64.tar.gz
+ls -l
+./ncdu /data/unzipped

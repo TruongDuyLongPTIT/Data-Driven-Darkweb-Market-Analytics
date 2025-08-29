@@ -1,0 +1,10 @@
+- Dữ liệu cực kỳ phức tạp, nuclues market cấu trúc web lại khác silkroad2 market thành ra phải xử lý riêng
+- Dữ liệu được định kỳ lấy cách nhau mỗi lần vài ngày, nhưng kết quả đôi khi thiếu (không biết vì sao)
+- Dữ liệu được các tác giả lấy theo search từ khóa, nhưng không phải từ khóa nào cũng có kết quả, thành ra phải lọc ra những topic nào có kết quả thì mới có dữ liệu
+- Dữ liệu ảnh thì không được crawl ra folder riêng mà nó nhúng thẳng vào html dưới dạng base64, nên muốn lấy ảnh thì phải dùng tool giải mã base 64.
+- Dữ liệu lưu cực kỳ khó hiểu - ý là cấu trúc và định dạng khó hiểu:
+	+ Bình thường thì là file index.html, nhưng đây thì lại là folder index.html, trong folder thì lại có 1 file metadata, rất là khó hiểu. Khi đổi đuôi sang HTML thì xem được 1 chút, nhưng không có thông tin giá trị
+	+ Sau khi mò một lúc thì đối với nuclues market thì chỉ có những file part.1 có dữ liệu (về mặt hàng, giá cả, địa chỉ ship, mua bán bằng coin nào)... => mấy file .meta, file không đuôi, hay các file có định dạng khác...thì hầu như không có dữ liệu hữu ích
+	=> Chỉ có file part.1 thì có dữ liệu, nên đối với folder nuclues thì phải lọc toàn bộ file có chứa part.1 ra, còn các file khác có thể bỏ qua.
+	
+	

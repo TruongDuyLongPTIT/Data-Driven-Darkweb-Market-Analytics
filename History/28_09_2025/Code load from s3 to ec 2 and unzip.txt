@@ -1,0 +1,223 @@
+#!/bin/bash
+
+# Cấu hình
+BUCKET="darkmarketrawzip"
+PREFIX="markets"
+RAW_DIR="/home/ec2-user/data/zip"
+UNZIP_DIR="/home/ec2-user/data/unzip"
+
+# Tạo thư mục
+mkdir -p "$RAW_DIR" "$UNZIP_DIR"
+
+# Kiểm tra AWS CLI
+if ! command -v aws &> /dev/null; then
+    echo "ERROR: AWS CLI chưa được cài đặt"
+    exit 1
+fi
+
+# Kiểm tra quyền truy cập S3
+echo "=== Kiểm tra kết nối S3 ==="
+if ! aws s3 ls "s3://$BUCKET/$PREFIX/" > /dev/null 2>&1; then
+    echo "ERROR: Không thể truy cập S3 bucket hoặc prefix"
+    exit 1
+fi
+
+# 1. Tải file từ S3 với sync (nhanh nhất) + progress monitoring
+echo "=== Bắt đầu tải file từ S3 về $RAW_DIR ==="
+
+# Lấy thông tin trước khi tải
+echo "Đang quét file trên S3..."
+s3_info=$(aws s3 ls "s3://$BUCKET/$PREFIX/" --recursive --human-readable --summarize | grep -E "(\.tar\.xz$|Total Size:|Total Objects:)")
+
+total_files=$(echo "$s3_info" | grep "\.tar\.xz$" | wc -l)
+total_size=$(echo "$s3_info" | grep "Total Size:" | awk '{print $(NF-1), $NF}')
+
+echo "Tìm thấy: $total_files file .tar.xz"
+echo "Tổng dung lượng: $total_size"
+
+if [ "$total_files" -eq 0 ]; then
+    echo "WARNING: Không có file .tar.xz nào để tải"
+    exit 0
+fi
+
+# Chạy sync song song với monitoring
+echo "Đang tải với aws s3 sync (tốc độ tối ưu)..."
+
+# Tạo background job để monitor progress
+monitor_progress() {
+    local start_time=$(date +%s)
+    while true; do
+        if [ -d "$RAW_DIR" ]; then
+            current_files=$(find "$RAW_DIR" -name "*.tar.xz" 2>/dev/null | wc -l)
+            current_size=$(du -sh "$RAW_DIR" 2>/dev/null | awk '{print $1}')
+            elapsed=$(($(date +%s) - start_time))
+            
+            if [ "$current_files" -gt 0 ]; then
+                echo "[$current_files/$total_files files] [$current_size tải về] [${elapsed}s]"
+            fi
+        fi
+        sleep 5
+    done
+}
+
+# Bắt đầu monitor
+monitor_progress &
+monitor_pid=$!
+
+# Chạy sync chính (nhanh nhất)
+aws s3 sync "s3://$BUCKET/$PREFIX/" "$RAW_DIR/" \
+    --exclude "*" \
+    --include "*.tar.xz" \
+    --exact-timestamps
+
+sync_exit_code=$?
+
+# Dừng monitor
+kill $monitor_pid 2>/dev/null
+wait $monitor_pid 2>/dev/null
+
+if [ $sync_exit_code -ne 0 ]; then
+    echo "ERROR: aws s3 sync thất bại"
+    exit 1
+fi
+
+echo "=== Tải xong toàn bộ file từ S3 ==="
+
+# Kiểm tra kết quả tải
+downloaded_files=$(find "$RAW_DIR" -name "*.tar.xz" | wc -l)
+downloaded_size=$(du -sh "$RAW_DIR" | awk '{print $1}')
+echo "✓ Đã tải: $downloaded_files/$total_files file ($downloaded_size)"
+
+if [ "$downloaded_files" -eq 0 ]; then
+    echo "ERROR: Không có file nào được tải về"
+    exit 1
+fi
+
+# Kiểm tra disk space cho giải nén
+available_space=$(df "$UNZIP_DIR" | tail -1 | awk '{print $4}')
+used_space=$(du -s "$RAW_DIR" | awk '{print $1}')
+needed_space=$((used_space * 3))  # Ước tính cần 3x cho giải nén
+
+if [ "$needed_space" -gt "$available_space" ]; then
+    echo "WARNING: Có thể không đủ dung lượng disk"
+    echo "Dự kiến cần: $(echo "scale=1; $needed_space/1024/1024" | bc 2>/dev/null || echo "N/A")GB"
+    echo "Còn lại: $(echo "scale=1; $available_space/1024/1024" | bc 2>/dev/null || echo "N/A")GB"
+    read -p "Tiếp tục? (y/N): " -n 1 -r
+    echo
+    [[ ! $REPLY =~ ^[Yy]$ ]] && exit 0
+fi
+
+# 2. Giải nén song song với progress
+echo "=== Bắt đầu giải nén song song ==="
+
+# Kiểm tra có pv không để dùng progress bar
+has_pv=false
+if command -v pv &> /dev/null; then
+    has_pv=true
+    echo "Sử dụng pv để hiển thị progress bar"
+else
+    echo "Không có pv - chỉ hiện thông báo cơ bản"
+    echo "Cài đặt pv: sudo yum install pv -y (RHEL) hoặc sudo apt install pv -y (Ubuntu)"
+fi
+
+# Function giải nén
+extract_file() {
+    local file="$1"
+    local basename=$(basename "$file")
+    local filesize=$(stat -c%s "$file" 2>/dev/null || echo "0")
+    
+    echo "[$(date '+%H:%M:%S')] >>> Bắt đầu: $basename"
+    
+    # Kiểm tra file hợp lệ
+    if [ ! -s "$file" ]; then
+        echo "[$(date '+%H:%M:%S')] ERROR: File $basename rỗng hoặc không tồn tại"
+        return 1
+    fi
+    
+    # Giải nén với hoặc không có progress bar
+    if [ "$has_pv" = true ]; then
+        # Với pv progress bar
+        if pv "$file" | tar -xJf - -C "$UNZIP_DIR" 2>/dev/null; then
+            echo "[$(date '+%H:%M:%S')] ✓ Hoàn thành: $basename"
+            return 0
+        else
+            echo "[$(date '+%H:%M:%S')] ERROR: Giải nén thất bại: $basename"
+            return 1
+        fi
+    else
+        # Không có pv - chỉ tar thông thường
+        if tar -xJf "$file" -C "$UNZIP_DIR" 2>/dev/null; then
+            echo "[$(date '+%H:%M:%S')] ✓ Hoàn thành: $basename"
+            return 0
+        else
+            echo "[$(date '+%H:%M:%S')] ERROR: Giải nén thất bại: $basename"
+            return 1
+        fi
+    fi
+}
+
+# Export function và variables
+export -f extract_file
+export UNZIP_DIR has_pv
+
+# Tính số job song song (với pv thì ít hơn để tránh mess up terminal)
+if [ "$has_pv" = true ]; then
+    max_jobs=$(($(nproc) / 2))
+    [ "$max_jobs" -lt 1 ] && max_jobs=1
+else
+    max_jobs=$(nproc)
+fi
+
+echo "Giải nén song song với $max_jobs process"
+
+# Background monitor cho giải nén
+monitor_extract() {
+    local total_files=$1
+    local start_time=$(date +%s)
+    
+    while true; do
+        if [ -d "$UNZIP_DIR" ]; then
+            extracted_items=$(find "$UNZIP_DIR" -mindepth 1 2>/dev/null | wc -l)
+            elapsed=$(($(date +%s) - start_time))
+            
+            if [ "$extracted_items" -gt 0 ]; then
+                echo "[Progress] $extracted_items items đã giải nén [${elapsed}s]"
+            fi
+        fi
+        sleep 10
+    done
+}
+
+# Start extract monitoring (chỉ khi không có pv để tránh mess)
+if [ "$has_pv" = false ]; then
+    monitor_extract "$downloaded_files" &
+    extract_monitor_pid=$!
+fi
+
+# Chạy giải nén song song
+find "$RAW_DIR" -name "*.tar.xz" -print0 | \
+    xargs -0 -P"$max_jobs" -I{} bash -c 'extract_file "$@"' _ {}
+
+# Dừng extract monitor
+if [ "$has_pv" = false ] && [ ! -z "$extract_monitor_pid" ]; then
+    kill $extract_monitor_pid 2>/dev/null
+    wait $extract_monitor_pid 2>/dev/null
+fi
+
+echo "=== Giải nén hoàn tất ==="
+
+# Thống kê cuối
+final_extracted=$(find "$UNZIP_DIR" -mindepth 1 -maxdepth 1 | wc -l)
+final_size=$(du -sh "$UNZIP_DIR" | awk '{print $1}')
+echo "✓ Kết quả: $final_extracted items trong $UNZIP_DIR ($final_size)"
+
+# Tùy chọn cleanup
+read -p "Xóa các file .tar.xz gốc để tiết kiệm dung lượng? (y/N): " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "Đang xóa file gốc..."
+    find "$RAW_DIR" -name "*.tar.xz" -delete
+    echo "✓ Đã xóa các file .tar.xz gốc"
+fi
+
+echo "=== HOÀN THÀNH TẤT CẢ ==="

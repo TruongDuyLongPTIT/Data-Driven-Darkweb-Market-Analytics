@@ -1,0 +1,8 @@
+# Chạy trong background với log
+nohup aws s3 sync /home/ec2-user/data/unzip/ s3://darkmarketrawunzip/ \
+    --storage-class STANDARD \
+    --delete \
+    > upload_log.txt 2>&1 &
+
+# Theo dõi tiến trình
+tail -f upload_log.txt

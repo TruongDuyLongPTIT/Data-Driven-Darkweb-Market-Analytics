@@ -1,0 +1,6 @@
+- Dữ liệu rất lớn, máy cá nhân không thể xử lý được cho lên aws xử lý
+- Load toàn bộ data lên s3 (52gb) - khá lâu...
+- S3 trên AWS không cho giải nén trực tiếp mà phải tạo 1 cái EC2 instance rồi load data từ s3 lên ec2, sau khi giải nén thì nó tầm > 1.3TB, rồi lại load về s3 (cách này trông khá ngớ ngẩn và mất tgian nhưng hỏi chatgpt rồi thì không có cách nào khác)
+- Tuy nhiên free tier + 200$ credit bị giới hạn, aws bắt phải nâng cấp, nếu không thì quá trình load > 1TB dữ liệu từ bộ nhớ EBS của EC2 sang S bị break.
+
+=> Quyết định chỉ xử lý 2 market chính (nhiều dữ liệu nhất) là silkroad2 và nuclear (cả 2 sau khi giải nén + lại thì tầm 100gb) cố gắng thì máy local xử lý được.
